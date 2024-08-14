@@ -1,6 +1,34 @@
-import mongoose from 'mongoose';
+import mongoose, { Document, model, Schema } from 'mongoose';
 
-const ProductSchema = new mongoose.Schema(
+export interface AddProductRequest {
+    name: string;
+    quantity?: number;
+    price?: number;
+    description?: string;
+}
+
+export interface IProduct {
+    name: string;
+    quantity: number;
+    price: number;
+    description: string;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+export interface Product {
+    id: string;
+    name: string;
+    quantity: number;
+    price: number;
+    description: string;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+export interface IProductDocument extends IProduct, Document {}
+
+const productSchema = new Schema<IProductDocument>(
     {
         name: { 
             type: String,
@@ -29,11 +57,4 @@ const ProductSchema = new mongoose.Schema(
     { collection: 'products' },
 );
 
-export const Product = mongoose.model('Product', ProductSchema);
-
-export interface AddProductRequest {
-    name: string;
-    quantity?: number;
-    price?: number;
-    description?: string;
-}
+export const ProductModel = model<IProductDocument>('Product', productSchema);

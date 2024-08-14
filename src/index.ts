@@ -3,7 +3,9 @@ dotenv.config();
 
 import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
-import { AddProductRequest, Product } from './models/product';
+import { ProductDao } from './dao/ProductDao';
+import { ProductController } from './controllers/ProductController';
+import { ProductModel } from './models/product';
 
 const SERVICE_NAME = 'DE_Store_Inventory';
 
@@ -14,7 +16,16 @@ const MONGO_DB_URI: string = process.env.DB_URI!;
 // Connect to inventory database
 mongoose.connect(MONGO_DB_URI)
   .then(() => console.log('✅ Connected to inventory database'))
-  .catch(err => console.log(err));
+  .catch(error => {
+    console.log('❌ Failed to connect to inventory database');
+    console.error(error);
+  });
+
+// Initialise data accessors
+const productDao = new ProductDao(ProductModel);
+
+// Initialise controllers
+const productController = new ProductController(productDao);
 
 // Initialise application server
 const app = express();
@@ -23,51 +34,7 @@ const app = express();
 app.use(express.json());
 
 // Routes
-app.post('/products/add', async (req: Request<{}, {}, AddProductRequest, {}>, res: Response) => {
-  const {
-    name,
-  } = req.body;
-
-  try {
-    if (!name) {
-      return res.status(400).json({
-        code: 400,
-        service: SERVICE_NAME,
-        route: '/products/add',
-        error: 'Name is required',
-      });
-    }
-
-    const product = new Product({ 
-      name,
-    });
-
-    await product.save();
-
-    res.status(201).json({
-      code: 201,
-      service: SERVICE_NAME,
-      route: '/products/add',
-      product: {
-        id: product._id,
-        name: product.name,
-        quantity: product.quantity,
-        price: product.price,
-        description: product.description,
-        createdAt: product.createdAt,
-        updatedAt: product.updatedAt,
-      },
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      code: 500,
-      service: SERVICE_NAME,
-      route: '/new',
-      error: 'Failed to add product',
-    });
-  }
-});
+app.post('/products/add', productController.addProduct)
 
 app.patch('/add-stock', async (req: Request, res: Response) => {
   const {
@@ -76,14 +43,14 @@ app.patch('/add-stock', async (req: Request, res: Response) => {
   } = req.body;
 
   try {
-    const product = await Product.findOne({ _id: id });
+    const product = await ProductModel.findOne({ _id: id });
 
     if (!product) {
       return res.status(404).json({
         code: 404,
         service: SERVICE_NAME,
         route: '/add-stock',
-        error: 'Product not found',
+        error: 'ProductModel not found',
       });
     }
 
@@ -128,14 +95,14 @@ app.patch('/remove-stock', async (req: Request, res: Response) => {
   } = req.body;
 
   try {
-    const product = await Product.findOne({ _id: id });
+    const product = await ProductModel.findOne({ _id: id });
 
     if (!product) {
       return res.status(404).json({
         code: 404,
         service: SERVICE_NAME,
         route: '/remove-stock',
-        error: 'Product not found',
+        error: 'ProductModel not found',
       });
     }
 
@@ -186,14 +153,14 @@ app.get('/find/:id', async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
-    const product = await Product.findOne({ _id: id });
+    const product = await ProductModel.findOne({ _id: id });
 
     if (!product) {
       return res.status(404).json({
         code: 404,
         service: SERVICE_NAME,
         route: '/find',
-        error: 'Product not found',
+        error: 'ProductModel not found',
       });
     }
 
@@ -220,7 +187,7 @@ app.get('/find/:id', async (req: Request, res: Response) => {
 
 app.get('/all', async (req: Request, res: Response) => {
   try {
-    const result = await Product.find();
+    const result = await ProductModel.find();
 
     const products = result.map(record => {
       return {
@@ -255,18 +222,18 @@ app.delete('/remove/:id', async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
-    const product = await Product.findOne({ _id: id });
+    const product = await ProductModel.findOne({ _id: id });
 
     if (!product) {
       return res.status(404).json({
         code: 404,
         service: SERVICE_NAME,
         route: '/remove',
-        error: 'Product not found',
+        error: 'ProductModel not found',
       });
     }
 
-    await Product.deleteOne({ _id: product.id });
+    await ProductModel.deleteOne({ _id: product.id });
 
     res.status(200).json({
       code: 200,
@@ -289,7 +256,7 @@ app.patch('/price/update', async (req: Request, res: Response) => {
   const { id, price } = req.body;
 
   try {
-    const product = await Product.findOneAndUpdate(
+    const product = await ProductModel.findOneAndUpdate(
       { _id: id },
       {
           price: price,
@@ -303,7 +270,7 @@ app.patch('/price/update', async (req: Request, res: Response) => {
         code: 404,
         service: SERVICE_NAME,
         route: '/price/update',
-        error: 'Product not found',
+        error: 'ProductModel not found',
       });
     }
 
