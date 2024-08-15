@@ -25,7 +25,7 @@ export class ProductDao {
                 name: dbProduct.name as string,
                 quantity: dbProduct.quantity,
                 price: dbProduct.price,
-                description: dbProduct.description,
+                discount: dbProduct.discount,
                 createdAt: dbProduct.createdAt,
                 updatedAt: dbProduct.updatedAt,
             }
@@ -44,7 +44,7 @@ export class ProductDao {
                 name: product.name as string,
                 quantity: product.quantity,
                 price: product.price,
-                description: product.description,
+                discount: product.discount,
                 createdAt: product.createdAt,
                 updatedAt: product.updatedAt,
             }));
@@ -71,7 +71,7 @@ export class ProductDao {
                 name: product.name as string,
                 quantity: product.quantity,
                 price: product.price,
-                description: product.description,
+                discount: product.discount,
                 createdAt: product.createdAt,
                 updatedAt: product.updatedAt,
             }
@@ -110,7 +110,7 @@ export class ProductDao {
                 name: product.name as string,
                 quantity: product.quantity,
                 price: product.price,
-                description: product.description,
+                discount: product.discount,
                 createdAt: product.createdAt,
                 updatedAt: product.updatedAt,
             }
@@ -149,7 +149,7 @@ export class ProductDao {
                 name: product.name as string,
                 quantity: product.quantity,
                 price: product.price,
-                description: product.description,
+                discount: product.discount,
                 createdAt: product.createdAt,
                 updatedAt: product.updatedAt,
             }
@@ -172,7 +172,7 @@ export class ProductDao {
                 name: product.name as string,
                 quantity: product.quantity,
                 price: product.price,
-                description: product.description,
+                discount: product.discount,
                 createdAt: product.createdAt,
                 updatedAt: product.updatedAt,
             }

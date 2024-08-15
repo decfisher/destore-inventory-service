@@ -2,16 +2,13 @@ import mongoose, { Document, model, Schema } from 'mongoose';
 
 export interface AddProductRequest {
     name: string;
-    quantity?: number;
-    price?: number;
-    description?: string;
 }
 
 export interface IProduct {
     name: string;
     quantity: number;
     price: number;
-    description: string;
+    discount: string;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -21,7 +18,7 @@ export interface Product {
     name: string;
     quantity: number;
     price: number;
-    description: string;
+    discount: string;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -41,9 +38,9 @@ const productSchema = new Schema<IProductDocument>(
             type: Number,
             default: 0.0,
         },
-        description: {
+        discount: {
             type: String,
-            default: '',
+            default: 'None',
         },
         createdAt: {
             type: Date,
