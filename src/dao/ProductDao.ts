@@ -34,4 +34,151 @@ export class ProductDao {
             throw error;
         }
     }
+
+    async getAll(): Promise<Product[]> {
+        try {
+            const products = await this.model.find();
+
+            return products.map((product) => ({
+                id: (product._id as unknown) as string,
+                name: product.name as string,
+                quantity: product.quantity,
+                price: product.price,
+                description: product.description,
+                createdAt: product.createdAt,
+                updatedAt: product.updatedAt,
+            }));
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
+    async findById(id: string): Promise<Product> {
+        try {
+            if (!id) {
+                throw new Error('Id is required');
+            }
+
+            const product = await this.model.findById(id);
+
+            if (!product) {
+                throw new Error('Product not found');
+            }
+
+            return {
+                id: (product._id as unknown) as string,
+                name: product.name as string,
+                quantity: product.quantity,
+                price: product.price,
+                description: product.description,
+                createdAt: product.createdAt,
+                updatedAt: product.updatedAt,
+            }
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
+    async addStock(id: string, quantity: number): Promise<Product> {
+        try {
+            if (!id) {
+                throw new Error('Id is required');
+            }
+
+            if (!quantity) {
+                throw new Error('Quantity is required');
+            }
+
+            if (quantity < 1) {
+                throw new Error('Quantity must be greater than 0');
+            }
+
+            const product = await this.model.findOneAndUpdate(
+                { _id: id },
+                { $inc: { quantity: quantity }, updatedAt: new Date(), },
+                { returnDocument: 'after' },
+            );
+
+            if (!product) {
+                throw new Error('Product not found');
+            }
+
+            return {
+                id: (product._id as unknown) as string,
+                name: product.name as string,
+                quantity: product.quantity,
+                price: product.price,
+                description: product.description,
+                createdAt: product.createdAt,
+                updatedAt: product.updatedAt,
+            }
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
+    async removeStock(id: string, quantity: number): Promise<Product> {
+        try {
+            if (!id) {
+                throw new Error('Id is required');
+            }
+
+            if (!quantity) {
+                throw new Error('Quantity is required');
+            }
+
+            if (quantity < 1) {
+                throw new Error('Quantity must be greater than 0');
+            }
+
+            const product = await this.model.findOneAndUpdate(
+                { _id: id },
+                { $inc: { quantity: -quantity }, updatedAt: new Date(), },
+                { returnDocument: 'after' },
+            );
+
+            if (!product) {
+                throw new Error('Product not found');
+            }
+
+            return {
+                id: (product._id as unknown) as string,
+                name: product.name as string,
+                quantity: product.quantity,
+                price: product.price,
+                description: product.description,
+                createdAt: product.createdAt,
+                updatedAt: product.updatedAt,
+            }
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
+    async delete(id: string): Promise<Product> {
+        try {
+            const product = await this.model.findByIdAndDelete(id);
+
+            if (!product) {
+                throw new Error('Product not found');
+            }
+
+            return {
+                id: (product._id as unknown) as string,
+                name: product.name as string,
+                quantity: product.quantity,
+                price: product.price,
+                description: product.description,
+                createdAt: product.createdAt,
+                updatedAt: product.updatedAt,
+            }
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
 }
