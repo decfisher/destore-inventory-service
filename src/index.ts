@@ -3,7 +3,6 @@ dotenv.config();
 
 import express from 'express';
 import mongoose from 'mongoose';
-import cors from 'cors';
 import { ProductDao } from './dao/ProductDao';
 import { ProductController } from './controllers/ProductController';
 import { ProductModel } from './models/product';
@@ -31,11 +30,6 @@ const app = express();
 
 // Allow JSON
 app.use(express.json());
-
-app.use(cors({
-  origin: 'https://de-store-fe-production.up.railway.app'
-}));
-
 
 // Routes
 app.post('/create', productController.createProduct);
