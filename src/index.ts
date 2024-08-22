@@ -6,6 +6,7 @@ import mongoose from 'mongoose';
 import { ProductDao } from './dao/ProductDao';
 import { ProductController } from './controllers/ProductController';
 import { ProductModel } from './models/product';
+import { EmailController } from './controllers/EmailController';
 
 // Get environment variables
 const port = process.env.PORT || 3000;
@@ -23,7 +24,11 @@ mongoose.connect(MONGO_DB_URI)
 const productDao = new ProductDao(ProductModel);
 
 // Initialise controllers
-const productController = new ProductController(productDao);
+const emailController = new EmailController({
+  apiKey: process.env.SG_MAIL_API_KEY!,
+  fromEmail: process.env.SG_MAIL_SENDER_ADDRESS!,
+})
+const productController = new ProductController(productDao, emailController);
 
 // Initialise application server
 const app = express();

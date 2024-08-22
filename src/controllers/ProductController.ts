@@ -1,12 +1,16 @@
 import { Request, Response, NextFunction } from 'express';
 import { ProductDao } from '../dao/ProductDao';
 import { AddProductRequest } from '../models/product';
+import { EmailController } from './EmailController';
+import lowStockEmailBody from '../util/LowStockEmailTemplate';
 
 export class ProductController {
     private productDao: ProductDao;
+    private emailController: EmailController;
 
-    constructor (productDao: ProductDao) {
+    constructor (productDao: ProductDao, emailController: EmailController) {
         this.productDao = productDao;
+        this.emailController = emailController;
     }
 
     createProduct = async (req: Request<{}, {}, AddProductRequest, {}>, res: Response, next: NextFunction) => {
@@ -56,6 +60,15 @@ export class ProductController {
         try {
             const { id, quantity } = req.body;
             const product = await this.productDao.addStock(id, quantity);
+
+            if (product.quantity < 10) {
+                this.emailController.sendEmail(
+                    'dfisher.contact@gmail.com',
+                    '[ALERT] A product in your inventory has been flagged as low stock',
+                    lowStockEmailBody('{recipient_name}', product),
+                );
+            }
+
             res.status(200).json(product);
         } catch (error) {
             console.error(error);
@@ -67,6 +80,15 @@ export class ProductController {
         try {
             const { id, quantity } = req.body;
             const product = await this.productDao.removeStock(id, quantity);
+
+            if (product.quantity < 10) {
+                this.emailController.sendEmail(
+                    'dfisher.contact@gmail.com',
+                    '[ALERT] A product in your inventory has been flagged as low stock',
+                    lowStockEmailBody('{recipient_name}', product),
+                );
+            }
+
             res.status(200).json(product);
         } catch (error) {
             console.error(error);
