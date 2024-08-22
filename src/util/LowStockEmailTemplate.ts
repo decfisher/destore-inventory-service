@@ -15,7 +15,7 @@ export default function lowStockEmailBody(recipient: string, product: Product) {
                     <h1 style="margin: 0;">Low Stock Alert</h1>
                 </div>
                 <div style="padding: 20px;">
-                    <p>Dear {recipient_name},</p>
+                    <p>Dear Store Manager,</p>
                     <p>We wanted to notify you that the stock level for the following product is running low:</p>
                     <div style="display: flex; align-items: center; margin-bottom: 20px;">
                         <div style="flex: 1;">
@@ -25,7 +25,7 @@ export default function lowStockEmailBody(recipient: string, product: Product) {
                     <div style="background-color: #ffeb3b; padding: 10px; border-radius: 4px; font-weight: bold; text-align: center;">
                         Current Stock Level: <strong>${product.quantity}</strong>
                     </div>
-                    <a href="#" style="display: block; width: 100%; text-align: center; padding: 15px; background-color: #ff6f61; color: #ffffff; text-decoration: none; border-radius: 4px; margin-top: 20px;">
+                    <a href="#" style="display: block; text-align: center; padding: 15px 10px; background-color: #ff6f61; color: #ffffff; text-decoration: none; border-radius: 4px; margin-top: 20px;">
                         Reorder Now
                     </a>
                 </div>
