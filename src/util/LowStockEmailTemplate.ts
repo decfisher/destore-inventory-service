@@ -1,9 +1,7 @@
 import { Product } from '../models/product';
 
 export default function lowStockEmailBody(recipient: string, product: Product) {
-    return `<!DOCTYPE html>
-            <html lang="en">
-            <head>
+    return `<head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Low Stock Alert</title>
@@ -100,6 +98,5 @@ export default function lowStockEmailBody(recipient: string, product: Product) {
                         <p>&copy; 2024 DE-Store Management. All rights reserved.</p>
                     </div>
                 </div>
-            </body>
-            </html>`
+            </body>`
 }
