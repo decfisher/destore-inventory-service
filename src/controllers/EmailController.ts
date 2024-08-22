@@ -19,7 +19,7 @@ export class EmailController {
                 to: toEmail,
                 from: this.fromEmail,
                 subject,
-                text: body,
+                html: body,
             });
         } catch (error) {
             console.error(error);
