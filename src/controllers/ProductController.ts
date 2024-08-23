@@ -79,7 +79,7 @@ export class ProductController {
     adjustStock = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const { id, quantity } = req.body;
-            const product = await this.productDao.addStock(id, quantity);
+            const product = await this.productDao.adjustStock(id, quantity);
 
             if (product.quantity < 10) {
                 this.emailController.sendEmail(
