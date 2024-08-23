@@ -76,6 +76,26 @@ export class ProductController {
         }
     }
 
+    adjustStock = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { id, quantity } = req.body;
+            const product = await this.productDao.addStock(id, quantity);
+
+            if (product.quantity < 10) {
+                this.emailController.sendEmail(
+                    'dfisher.contact@gmail.com',
+                    '[ALERT] A product in your inventory has been flagged as low stock',
+                    lowStockEmailBody('{recipient_name}', product),
+                );
+            }
+
+            res.status(200).json(product);
+        } catch (error) {
+            console.error(error);
+            next(error);
+        }
+    }
+
     removeStock = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const { id, quantity } = req.body;

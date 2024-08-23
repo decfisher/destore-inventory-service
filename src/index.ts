@@ -47,6 +47,8 @@ app.patch('/add-stock', productController.addStock);
 
 app.patch('/remove-stock', productController.removeStock);
 
+app.patch('/adjust-stock', productController.adjustStock);
+
 app.delete('/delete', productController.deleteProduct);
 
 // Start the server
