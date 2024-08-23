@@ -37,19 +37,11 @@ const app = express();
 app.use(express.json());
 
 // Routes
-app.post('/create', productController.createProduct);
-
 app.get('/all', productController.getAllProducts);
 
 app.get('/find/:id', productController.findProductById);
 
-app.patch('/add-stock', productController.addStock);
-
-app.patch('/remove-stock', productController.removeStock);
-
 app.patch('/adjust-stock', productController.adjustStock);
-
-app.delete('/delete', productController.deleteProduct);
 
 // Start the server
 app.listen(port, () => {
